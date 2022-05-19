@@ -1,0 +1,73 @@
+*
+{
+	--gray: #666666;
+	--light: #cccccc;
+	--dark: #0f0f23;
+	--lightergreen: #99ff99;
+	--lightgreen: #00cc00;
+	--green: #009900;
+	--globalBorderRadius: 3px;
+}
+
+body
+{
+	font-family: "Cascadia Code", "Source Code Pro","Courier New", Courier, monospace;
+	font-size: large;
+	background-color: var(--dark);
+	color:var(--light);
+}
+
+
+h1
+{
+	text-align: center;
+}
+
+.Game-Grid-Container
+{
+	--squareSize: 30px;
+	display:grid;
+	grid-template-columns: repeat(5, var(--squareSize));
+	grid-template-rows: repeat(5, var(--squareSize));
+	gap:4px;
+	justify-content: center;
+}
+
+.Game-Grid-Container>.Game-Grid-Element
+{
+	display:grid;
+	background-color: darkslategray;
+	border:var(--gray) solid 1px;
+	width:var(--squareSize); 
+	height:var(--squareSize);
+	transition: 50ms;
+	text-align: center;
+	border-radius: var(--globalBorderRadius);
+}
+
+.Game-Grid-Container>.Game-Grid-Element:hover
+{
+	background-color: darkcyan;
+	transition: 50ms;
+}
+
+.Game-Grid-Container>.Game-Grid-Element:active
+{
+	/*--reduceamount: calc(6/7); /*float between 0 and 1 !*/
+	background-color: rgb(0, 200, 200);
+	transition: 50ms;
+	/*margin-left: calc(var(--squareSize) * (1-var(--reduceamount)));
+	margin-top: calc(var(--squareSize) * (1-var(--reduceamount)));
+	width:calc(var(--squareSize) * var(--reduceamount));
+	height:calc(var(--squareSize) * var(--reduceamount));*/
+}
+
+.Game-Grid-Container>.Game-Grid-Element img
+{
+	border-radius: var(--globalBorderRadius);
+	border:none;
+	width: var(--squareSize);
+	height:var(--squareSize);
+
+}
+
