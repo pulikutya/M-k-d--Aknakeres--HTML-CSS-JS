@@ -27,8 +27,8 @@ h1
 {
 	--squareSize: 30px;
 	display:grid;
-	grid-template-columns: repeat(5, var(--squareSize));
-	grid-template-rows: repeat(5, var(--squareSize));
+	grid-template-columns: repeat(10, var(--squareSize));
+	grid-template-rows: repeat(10, var(--squareSize));
 	gap:4px;
 	justify-content: center;
 }
@@ -71,3 +71,33 @@ h1
 
 }
 
+.Game-ControlSelector button
+{
+	background-color: darkslategray;
+	color:var(--light);
+}
+
+.Game-ControlSelector button:hover
+{
+	background-color: darkcyan;
+}
+.Game-ControlSelector button:active
+{
+	background-color:rgb(0, 200, 200);
+}
+
+
+.ActiveControlSelectorButton
+{
+	background-color: rgb(126, 8, 150);
+}
+
+.ActiveControlSelectorButton :hover
+{
+	background-color: rgb(164, 13, 194);
+}
+
+.ActiveControlSelectorButton :active
+{
+	background-color: rgb(0, 200, 200);
+}
