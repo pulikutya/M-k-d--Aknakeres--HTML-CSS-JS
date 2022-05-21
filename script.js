@@ -33,6 +33,37 @@ const Number_Colors = [undefined, "blue", "green", "red", "purple", "yellow", "b
 const ClickSelector = document.querySelector("#ClickSelector");
 const FlagSelector = document.querySelector("#FlagSelector");
 
+
+const NewGameButton = document.querySelector("#NewGameButton");
+
+const WidthSlider = document.querySelector("#WidthSelector");
+const HeightSlider = document.querySelector("#HeightSelector");
+const MineNumberSlider = document.querySelector("#MineNumberSelector");
+
+const WidthSliderOUT = document.querySelector("#WidthSelectorOut");
+const HeightSliderOUT = document.querySelector("#HeightSelectorOut");
+const MineNumberSliderOUT = document.querySelector("#MineNumberSelectorOut");
+
+function UpdateSlider(ins, out, text)
+{
+	out.innerText = `${text}: ${ins.value}`
+	LimitMineSlider();
+}
+
+function LimitMineSlider()
+{
+	MineNumberSlider.max = Math.floor(WidthSlider.value * HeightSlider.value / 3);
+	MineNumberSlider.min = Math.floor(WidthSlider.value * HeightSlider.value / 20);
+}
+
+NewGameButton.onclick = function() {
+	NewGame(WidthSlider.value, HeightSlider.value, MineNumberSlider.value);
+}
+
+WidthSlider.onclick = function(e) {UpdateSlider(WidthSlider, WidthSliderOUT, "Width")}
+HeightSlider.onclick = function(e) {UpdateSlider(HeightSlider, HeightSliderOUT, "Height")}
+MineNumberSlider.onclick = function(e) {UpdateSlider(MineNumberSlider, MineNumberSliderOUT, "Mines")}
+
 function ControlSelector_LeftClick(control)
 {
 	ClickSelector.removeAttribute("ActiveControlSelectorButton");
@@ -42,10 +73,12 @@ function ControlSelector_LeftClick(control)
 		case "ClickSelector":
 			ControlMode = "C";
 			ClickSelector.classList.add("ActiveControlSelectorButton");
+			FlagSelector.classList.remove("ActiveControlSelectorButton");
 			break;
 		case "FlagSelector":
 			ControlMode = "F";
 			FlagSelector.classList.add("ActiveControlSelectorButton");
+			ClickSelector.classList.remove("ActiveControlSelectorButton");
 			break;
 	}
 }
@@ -53,9 +86,9 @@ function ControlSelector_LeftClick(control)
 ClickSelector.onclick = ControlSelector_LeftClick;
 FlagSelector.onclick = ControlSelector_LeftClick;
 
-var width = 10;
-var height = 10;
-var mines = 20;
+var width = 7;
+var height = 7;
+var mines = 5;
 
 function GenerateOneDiv(x, y)
 {
@@ -67,8 +100,25 @@ function GenerateOneDiv(x, y)
 	return crn;
 }
 
-function GenerateMap()
+function setCssNewSize(w, h)
 {
+	Game_Grid_Container.style.gridTemplateColumns = `repeat(${h}, var(--squareSize))`;
+	Game_Grid_Container.style.gridTemplateRows = `repeat(${w}, var(--squareSize))`;
+}
+
+function GenerateMap(neww, newh)
+{
+	if(neww == undefined)
+	{
+		neww = width;
+	}
+	if(newh== undefined)
+	{
+		newh= height;
+	}
+	setCssNewSize(neww, newh);
+	width = neww;
+	height = newh;
 	ClearMap();
 	for(w = 0; w < width; w++)
 	{
@@ -88,6 +138,7 @@ function ClearMap()
 {
 	Game_Grid_Container.innerHTML = "";
 	map = [];
+	reveal_map = [];
 }
 
 function GetGridElement(x, y)
@@ -123,11 +174,11 @@ function SetRevealField(x, y, value) //F is flag E is empty (unrevealed) S is us
 		}
 		case "E":
 		{
-			let img = document.createElement("img");
+			/*let img = document.createElement("img");
 			img.src = "Empty.png";
 			img.alt = " ";
 			img.id =`${x},${y}` ;
-			crn.appendChild(img);
+			crn.appendChild(img);*/
 			break;
 		}
 		default: //checking map cases
@@ -167,6 +218,7 @@ function SetRevealField(x, y, value) //F is flag E is empty (unrevealed) S is us
 			}
 		}
 	}
+	
 }
 
 function DivIdToCoords(id) //converts the div id for example "#2,3" to coords: [2, 3]
@@ -177,6 +229,7 @@ function DivIdToCoords(id) //converts the div id for example "#2,3" to coords: [
 function GridElement_LeftClick(e) //left click event when clicked on a field
 {
 	c = DivIdToCoords(e.target.id);
+	console.log("click: " + c);
 	if(firststep)
 	{
 		PlaceMinesAndNumbers(mines, c);
@@ -218,7 +271,7 @@ function ArrayIncludes(array, item)
 function PlaceMinesAndNumbers(count, startpoint) //startpoint is where the use clicks first
 {
 	let d = GetNeighboorCells(parseInt(startpoint[0]), parseInt(startpoint[1]));
-	d.push(startpoint);
+	d.push([parseInt(startpoint[0]), parseInt(startpoint[1])] );
 	
 	console.log(`startpoint: ${startpoint};`)
 	for(let i = 0; i < count; i++)
@@ -246,7 +299,13 @@ function PlaceMinesAndNumbers(count, startpoint) //startpoint is where the use c
 }
 
 
-var MineCounter = 32;
+var MineCounter = mines;
+var MineCounterText = document.querySelector("#MineCounter")
+function UpdateMineCounter()
+{
+	MineCounterText.innerText = `${MineCounter}`;
+}
+
 
 function RevealUser(x, y) //returns true if there is a mine
 {
@@ -259,13 +318,17 @@ function RevealUser(x, y) //returns true if there is a mine
 			Lose();
 			return true;
 		}
+		else
+		{
+			notminescounter++;
+		}
 		return false;
 	}
 }
-
+let notminescounter = 0;
 function CheckWin()
 {
-	let notminescounter = 0;
+	
 	
 	if(width * height - notminescounter == mines)
 	{
@@ -278,12 +341,15 @@ function FlagMineUser(x, y)
 	switch(reveal_map[x][y])
 	{
 		case "E":
+			MineCounter--;
 			SetRevealField(x, y, "F")
 			break;
 		case "F":
+			MineCounter++;
 			SetRevealField(x, y, "E");
 			break;
 	}
+	UpdateMineCounter();
 }
 
 function AutoReveal0(x, y)
@@ -326,16 +392,49 @@ function UserLeftClickField(sx, sy)
 
 function Win()
 {
-	alert("win");
+	alert("maga nyert")
 }
 
 
 function Lose()
 {
-	alert("lose");
+	LoseAnimation();
+}
+
+function LoseAnimation()
+{
+	let v =document.createElement("video");
+	v.src="explosion.mp4"
+	v.onended = LoseAnimationEnd;
+	v.alt ="sus"
+	v.id = "explosion"
+	document.querySelector("#body").appendChild(v);
+	v.play();
+}
+
+function LoseAnimationEnd()
+{
+	const time = 100000000;
+	setTimeout(console.log(10), document.querySelector("#explosion").remove());
+	
 }
 
 let firststep = true;
 
-GenerateMap();
+function NewGame(w, h, smines)
+{
+	setCssNewSize(w, h);
+	width = w;
+	height = h;
+	mines = smines;
+	MineCounter = mines;
+	UpdateMineCounter();
+	GenerateMap();
+	firststep = true;
+}
 
+UpdateSlider(WidthSlider, WidthSliderOUT, "width");
+UpdateSlider(HeightSlider, HeightSliderOUT, "height");
+UpdateSlider(MineNumberSlider, MineNumberSliderOUT, "mines");
+
+NewGame(7, 7, 20);

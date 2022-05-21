@@ -8,22 +8,48 @@
 	<script src="script.js", defer></script>
 	<title>Aknakereső</title>
 </head>
-<body>
+<body id = "body">
 	<header>
 		<h1>Aknakereső</h1>
 		<noscript><h1>Kapcsold be a javascriptet</h1></noscript>
 	</header>
 	<main>
+		<p class ="GameDescription">
+			Egy szám szomszédjai közül pontosan annyi akna van amennyit a szám mutat. A 0 számok körül automatikusan fel lesz derítve a terület, mivel ott biztosan nincs akna. A lényeg az hogy felderítés során ne legyen akna. Ha mindent felderítettél ami nem akna, akkor nyertél.
+			Lehet zászlóval kijelölni négyzeteket és Felül jobb oldalt ki lehet választani hogy zászlózni akarsz vagy normálisan létezni. Felette egy szám mutatja az eredeti aknák és lerakott zászlók különbségét.
+			Új játéknál beállíthatod hogy mi legyen a szélesség magasság és aknák száma.
+		</p>
+		<div class="Game-UI">
+			<div class = "Game-MineCounter">
+				<div id="MineCounter"></div>
+			</div>
+			<div class="Game-ControlSelector">
+				<button id = "ClickSelector" class = "ActiveControlSelectorButton">
+					Reveal
+				</button>
+				<button id = "FlagSelector">
+					Flag
+				</button>
+			</div>
+		</div>
+		<div class="NewGameStarter" class="Game-UI">
+			New Game Settings
+			<div class = "NewGameInput">
+				<div id = "WidthSelectorOut">Width:</div>
+				<input type="range" min="4" max="15" value="10" class="slider" id="WidthSelector">
+			</div>
+			<div>
+				<div id = "HeightSelectorOut">Height:</div>
+				<input type="range" min="4" max="15" value="10" class="slider" id="HeightSelector">
+			</div>
+			<div>
+				<div id = "MineNumberSelectorOut">Mines:</div>
+				<input type="range" min="2" max="100" value="10" class="slider" id="MineNumberSelector">
+			</div>
+			<button id="NewGameButton">New Game</button>
+		</div>
 		<div class="Game-Grid-Container">
 			
-		</div>
-		<div class="Game-ControlSelector">
-			<button id = "ClickSelector" class = "ActiveControlSelectorButton">
-				Reveal
-			</button>
-			<button id = "FlagSelector">
-				Flag
-			</button>
 		</div>
 	</main>
 </body>
