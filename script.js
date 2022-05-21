@@ -44,16 +44,19 @@ const WidthSliderOUT = document.querySelector("#WidthSelectorOut");
 const HeightSliderOUT = document.querySelector("#HeightSelectorOut");
 const MineNumberSliderOUT = document.querySelector("#MineNumberSelectorOut");
 
-function UpdateSlider(ins, out, text)
+function UpdateSlider(ins, out, text, updatemineslider = true)
 {
 	out.innerText = `${text}: ${ins.value}`
-	LimitMineSlider();
+	if(updatemineslider) { LimitMineSlider(); }
 }
 
 function LimitMineSlider()
 {
-	MineNumberSlider.max = Math.floor(WidthSlider.value * HeightSlider.value / 3);
+	newmax = WidthSlider.value *  HeightSlider.value / 3;
+	MineNumberSlider.value = Math.floor(MineNumberSlider.value / MineNumberSlider.max  * newmax);
+	MineNumberSlider.max = Math.floor(newmax);
 	MineNumberSlider.min = Math.floor(WidthSlider.value * HeightSlider.value / 20);
+	UpdateSlider(MineNumberSlider, MineNumberSliderOUT, "Mines", false)
 }
 
 NewGameButton.onclick = function() {
@@ -86,9 +89,9 @@ function ControlSelector_LeftClick(control)
 ClickSelector.onclick = ControlSelector_LeftClick;
 FlagSelector.onclick = ControlSelector_LeftClick;
 
-var width = 7;
-var height = 7;
-var mines = 5;
+var width = 10;
+var height = 10;
+var mines = 20;
 
 function GenerateOneDiv(x, y)
 {
@@ -114,7 +117,7 @@ function GenerateMap(neww, newh)
 	}
 	if(newh== undefined)
 	{
-		newh= height;
+		newh = height;
 	}
 	setCssNewSize(neww, newh);
 	width = neww;
@@ -156,7 +159,15 @@ function SetMapField(x, y, value) //M is mine, F is flag, E is empty, an number 
 	map[x][y] = `${value}`;
 }
 
-function SetRevealField(x, y, value) //F is flag E is empty (unrevealed) S is use the map, so reveal the field
+function MakeImgInDiv(crndiv, path, alt)
+{
+	let img = document.createElement("img");
+	img.src = path;
+	img.id = crndiv.id;
+	crndiv.appendChild(img);
+}
+
+function SetRevealField(x, y, value) //F is flag E is empty (unrevealed) S is use the map, so reveal the field FW - wrong flag
 {
 	let crn = GetGridElement(x, y);
 	reveal_map[x][y] = value;
@@ -165,20 +176,22 @@ function SetRevealField(x, y, value) //F is flag E is empty (unrevealed) S is us
 	{
 		case "F":
 		{
-			let img = document.createElement("img");
-			img.src = "flag.png";
-			img.alt = "F";
-			img.id =`${x},${y}` ;
-			crn.appendChild(img);
-			break;
+			MakeImgInDiv(crn, "flag.png", "F"); break;
+		}
+		case "M":
+		{
+			MakeImgInDiv(crn, "mine.png", "M"); break;
+		}
+		case "FW":
+		{
+			MakeImgInDiv(crn, "flag_wrong.png", "FW"); break;
+		}
+		case "ME":
+		{
+			MakeImgInDiv(crn, "mine_exploded.png", "ME"); break;
 		}
 		case "E":
 		{
-			/*let img = document.createElement("img");
-			img.src = "Empty.png";
-			img.alt = " ";
-			img.id =`${x},${y}` ;
-			crn.appendChild(img);*/
 			break;
 		}
 		default: //checking map cases
@@ -187,21 +200,7 @@ function SetRevealField(x, y, value) //F is flag E is empty (unrevealed) S is us
 			{
 				case "M":
 				{
-					let img = document.createElement("img");
-					img.src = "mine.png";
-					img.alt = "M";
-					img.id =`${x},${y}` ;
-					crn.appendChild(img);
-					break;
-				}
-				case "E":
-				{
-					/*let img = document.createElement("img");
-					img.src = "Empty.png";
-					img.alt = " ";
-					img.id =`${x},${y}` ;
-					crn.appendChild(img);*/
-					break;
+					SetMapField(x, y, "M"); break;
 				}
 				default:
 				{
@@ -214,8 +213,10 @@ function SetRevealField(x, y, value) //F is flag E is empty (unrevealed) S is us
 					{
 						throw new Error("van egy buszjegyed, javascript debuggingra kéne? (igen ez egy error)");
 					}
+					break;
 				}
 			}
+			break;
 		}
 	}
 	
@@ -228,14 +229,18 @@ function DivIdToCoords(id) //converts the div id for example "#2,3" to coords: [
 
 function GridElement_LeftClick(e) //left click event when clicked on a field
 {
-	c = DivIdToCoords(e.target.id);
-	console.log("click: " + c);
-	if(firststep)
+	if(gamerunning)
 	{
-		PlaceMinesAndNumbers(mines, c);
-		firststep = false;
+		c = DivIdToCoords(e.target.id);
+		console.log("click: " + c);
+		if(firststep)
+		{
+			PlaceMinesAndNumbers(mines, c);
+			firststep = false;
+		}
+		UserLeftClickField(c[0], c[1]);
 	}
-	UserLeftClickField(c[0], c[1]);
+	
 }
 
 function GetNeighboorCells(x, y)
@@ -365,9 +370,6 @@ function AutoReveal0(x, y)
 		
 		return;
 	}
-			
-		
-	
 }
 
 function UserLeftClickField(sx, sy)
@@ -392,35 +394,38 @@ function UserLeftClickField(sx, sy)
 
 function Win()
 {
-	alert("maga nyert")
+	gamerunning = false;
+	alert("maga nyert");
+	EndGameReveal();
 }
 
 
 function Lose()
 {
+	gamerunning = false;
 	LoseAnimation();
+	
 }
 
 function LoseAnimation()
 {
 	let v =document.createElement("video");
 	v.src="explosion.mp4"
-	v.onended = LoseAnimationEnd;
+	v.onended = LoseAnimation2;
 	v.alt ="sus"
 	v.id = "explosion"
 	document.querySelector("#body").appendChild(v);
 	v.play();
 }
 
-function LoseAnimationEnd()
+function LoseAnimation2()
 {
-	const time = 100000000;
-	setTimeout(console.log(10), document.querySelector("#explosion").remove());
-	
+	document.querySelector("#explosion").remove();
+	EndGameReveal();
 }
 
 let firststep = true;
-
+var gamerunning = false;
 function NewGame(w, h, smines)
 {
 	setCssNewSize(w, h);
@@ -431,10 +436,47 @@ function NewGame(w, h, smines)
 	UpdateMineCounter();
 	GenerateMap();
 	firststep = true;
+	gamerunning = true;
+}
+
+function EndGameReveal()
+{
+	for(let w = 0; w < width; w++)
+	{
+		for(let h = 0; h < height; h++)
+		{
+			switch(reveal_map[w][h]) 
+			{
+				case "M":
+				{
+					SetRevealField(w, h, "ME"); break;
+				}
+				case "F":
+				{
+					if(map[w][h] == "M")
+					{
+						SetRevealField(w, h, "F");
+					}
+					else
+					{
+						SetRevealField(w, h, "FW");
+					}
+					break;
+				}
+				default:
+					if(map[w][h] == "M")
+					{
+						SetRevealField(w, h, "M");
+					}
+				break;
+			}
+			
+		}
+	}
 }
 
 UpdateSlider(WidthSlider, WidthSliderOUT, "width");
 UpdateSlider(HeightSlider, HeightSliderOUT, "height");
 UpdateSlider(MineNumberSlider, MineNumberSliderOUT, "mines");
 
-NewGame(7, 7, 20);
+NewGame(10, 10, 20);
