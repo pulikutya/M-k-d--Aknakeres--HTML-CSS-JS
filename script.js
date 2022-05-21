@@ -232,7 +232,6 @@ function GridElement_LeftClick(e) //left click event when clicked on a field
 	if(gamerunning)
 	{
 		c = DivIdToCoords(e.target.id);
-		console.log("click: " + c);
 		if(firststep)
 		{
 			PlaceMinesAndNumbers(mines, c);
@@ -277,8 +276,6 @@ function PlaceMinesAndNumbers(count, startpoint) //startpoint is where the use c
 {
 	let d = GetNeighboorCells(parseInt(startpoint[0]), parseInt(startpoint[1]));
 	d.push([parseInt(startpoint[0]), parseInt(startpoint[1])] );
-	
-	console.log(`startpoint: ${startpoint};`)
 	for(let i = 0; i < count; i++)
 	{
 		let r = null;
@@ -288,7 +285,6 @@ function PlaceMinesAndNumbers(count, startpoint) //startpoint is where the use c
 			r = [randomIntBetween(0, width), randomIntBetween(0, height)];
 		}
 		map[r[0]][r[1]] = "M";
-		console.log(`mine: ${r}`)
 	}
 ;
 	for(let w = 0; w < width; w++)
