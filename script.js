@@ -105,8 +105,8 @@ function GenerateOneDiv(x, y)
 
 function setCssNewSize(w, h)
 {
-	Game_Grid_Container.style.gridTemplateColumns = `repeat(${h}, var(--squareSize))`;
-	Game_Grid_Container.style.gridTemplateRows = `repeat(${w}, var(--squareSize))`;
+	Game_Grid_Container.style.gridTemplateColumns = `repeat(${w}, var(--squareSize))`;
+	Game_Grid_Container.style.gridTemplateRows = `repeat(${h}, var(--squareSize))`;
 }
 
 function GenerateMap(neww, newh)
@@ -232,7 +232,7 @@ function GridElement_LeftClick(e) //left click event when clicked on a field
 	if(gamerunning)
 	{
 		c = DivIdToCoords(e.target.id);
-		if(firststep)
+		if(firststep && ControlMode == "C")
 		{
 			PlaceMinesAndNumbers(mines, c);
 			firststep = false;
@@ -329,11 +329,9 @@ function RevealUser(x, y) //returns true if there is a mine
 let notminescounter = 0;
 function CheckWin()
 {
-	
-	
 	if(width * height - notminescounter == mines)
 	{
-		return Win();
+		Win();
 	}
 } //returns L if lose W if win
 
