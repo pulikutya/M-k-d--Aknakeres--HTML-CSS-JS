@@ -106,7 +106,8 @@ function GenerateOneDiv(x, y)
 function setCssNewSize(w, h)
 {
 	Game_Grid_Container.style.gridTemplateColumns = `repeat(${w}, var(--squareSize))`;
-	Game_Grid_Container.style.gridTemplateRows = `repeat(${h}, var(--squareSize))`;
+	Game_Grid_Container.style.gridTemplateRows = `repeat(${h}, var(--squareSize))`; 
+	
 }
 
 function GenerateMap(neww, newh)
