@@ -60,7 +60,7 @@ function LimitMineSlider()
 }
 
 NewGameButton.onclick = function() {
-	NewGame(WidthSlider.value, HeightSlider.value, MineNumberSlider.value);
+	NewGame(parseInt(WidthSlider.value), parseInt(HeightSlider.value), parseInt(MineNumberSlider.value));
 }
 
 WidthSlider.onclick = function(e) {UpdateSlider(WidthSlider, WidthSliderOUT, "Height")}
@@ -309,22 +309,27 @@ function UpdateMineCounter()
 }
 
 
-function RevealUser(x, y) //returns true if there is a mine
+function RevealUser(x, y)
 {
 	if(reveal_map[x][y] == "E")
 	{
 		SetRevealField(x, y, map[x][y]);
-		AutoReveal0(x, y);
+		
+		
 		if(map[x][y] == "M")
 		{
 			Lose();
-			return true;
+			
 		}
 		else
 		{
 			notminescounter++;
+			if(map[x][y] == 0)
+			{
+			AutoReveal0(x, y);
+			}
 		}
-		return false;
+		
 	}
 }
 let notminescounter = 0;
@@ -432,6 +437,7 @@ function NewGame(w, h, smines)
 	GenerateMap();
 	firststep = true;
 	gamerunning = true;
+	notminescounter = 0;
 }
 
 function EndGameReveal()
