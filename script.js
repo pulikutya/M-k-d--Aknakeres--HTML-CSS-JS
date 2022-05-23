@@ -63,8 +63,8 @@ NewGameButton.onclick = function() {
 	NewGame(WidthSlider.value, HeightSlider.value, MineNumberSlider.value);
 }
 
-WidthSlider.onclick = function(e) {UpdateSlider(WidthSlider, WidthSliderOUT, "Width")}
-HeightSlider.onclick = function(e) {UpdateSlider(HeightSlider, HeightSliderOUT, "Height")}
+WidthSlider.onclick = function(e) {UpdateSlider(WidthSlider, WidthSliderOUT, "Height")}
+HeightSlider.onclick = function(e) {UpdateSlider(HeightSlider, HeightSliderOUT, "Width")}
 MineNumberSlider.onclick = function(e) {UpdateSlider(MineNumberSlider, MineNumberSliderOUT, "Mines")}
 
 function ControlSelector_LeftClick(control)
@@ -105,8 +105,8 @@ function GenerateOneDiv(x, y)
 
 function setCssNewSize(w, h)
 {
-	Game_Grid_Container.style.gridTemplateColumns = `repeat(${w}, var(--squareSize))`;
-	Game_Grid_Container.style.gridTemplateRows = `repeat(${h}, var(--squareSize))`; 
+	Game_Grid_Container.style.gridTemplateColumns = `repeat(${h}, var(--squareSize))`;
+	Game_Grid_Container.style.gridTemplateRows = `repeat(${w}, var(--squareSize))`; 
 	
 }
 
@@ -470,8 +470,8 @@ function EndGameReveal()
 	}
 }
 
-UpdateSlider(WidthSlider, WidthSliderOUT, "width");
-UpdateSlider(HeightSlider, HeightSliderOUT, "height");
+UpdateSlider(WidthSlider, WidthSliderOUT, "height");
+UpdateSlider(HeightSlider, HeightSliderOUT, "width");
 UpdateSlider(MineNumberSlider, MineNumberSliderOUT, "mines");
 
 NewGame(10, 10, 20);
