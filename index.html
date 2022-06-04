@@ -9,11 +9,11 @@
 	<title>Aknakereső</title>
 
 	<!--Image preloading-->
-	<link rel="prefetch"  href="flag.png">
-	<link rel="prefetch"  href="explosion.mp4">
-	<link rel="prefetch"  href="mine.png">
-	<link rel="prefetch"  href="mine_exploded.png">
-	<link rel="prefetch"  href="flag_wrong.png">
+	<link rel="preload" as="image"  href="flag.png">
+	<link rel="preload" as="video/mp4" href="explosion.mp4">
+	<link rel="preload" as="image" href="mine.png">
+	<link rel="preload" as="image" href="mine_exploded.png">
+	<link rel="preload" as="image" href="flag_wrong.png">
 </head>
 <body id = "body">
 	<header>
@@ -42,15 +42,15 @@
 		<div class="NewGameStarter" class="Game-UI">
 			New Game Settings
 			<div class = "NewGameInput">
-				<div id = "WidthSelectorOut">Height:</div>
+				<div id = "WidthSelectorOut">height:</div>
 				<input type="range" min="4" max="15" value="10" class="slider" id="WidthSelector">
 			</div>
 			<div>
-				<div id = "HeightSelectorOut">Width:</div>
+				<div id = "HeightSelectorOut">width:</div>
 				<input type="range" min="4" max="15" value="10" class="slider" id="HeightSelector">
 			</div>
 			<div>
-				<div id = "MineNumberSelectorOut">Mines:</div>
+				<div id = "MineNumberSelectorOut">mines:</div>
 				<input type="range" min="5" max="33" value="20" class="slider" id="MineNumberSelector">
 			</div>
 			<button id="NewGameButton">New Game</button>
