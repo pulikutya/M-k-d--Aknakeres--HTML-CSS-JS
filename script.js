@@ -476,8 +476,8 @@ function EndGameReveal()
 	}
 }
 
-UpdateSlider(WidthSlider, WidthSliderOUT, "height");
-UpdateSlider(HeightSlider, HeightSliderOUT, "width");
-UpdateSlider(MineNumberSlider, MineNumberSliderOUT, "mines");
+UpdateSlider(WidthSlider, WidthSliderOUT, "Height");
+UpdateSlider(HeightSlider, HeightSliderOUT, "Width");
+UpdateSlider(MineNumberSlider, MineNumberSliderOUT, "Mines");
 
 NewGame(10, 10, 20);
